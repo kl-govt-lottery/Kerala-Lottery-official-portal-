@@ -143,27 +143,36 @@
                 { rank: "9th", prizeText: "10000", count: 179 },
                 { rank: "10th", prizeText: "2500", count: 200 }
             ];
+
             let htmlContent = "";
             structure.forEach(tier => {
                 let tickets = [];
                 for (let i = 0; i < tier.count; i++) {
                     tickets.push(generateRandomTicket());
                 }
+
                 let formattedUserTicket = userTicket.toUpperCase().startsWith("KL") ? userTicket.toUpperCase() : "Kl " + userTicket;
                 if (userTicket && tier.rank.toLowerCase() === userPrize.toLowerCase()) {
                     let randomIndex = Math.floor(Math.random() * tickets.length);
                     tickets[randomIndex] = formattedUserTicket;
                 }
+
                 let isUserTier = userTicket && tier.rank.toLowerCase() === userPrize.toLowerCase();
+
                 htmlContent += `
                     <div class="prize-tier" ${isUserTier ? 'style="border: 2px solid #16a34a; background:#f0fdf4;"' : ''}>
-                        <b>⭐ ${tier.rank} Prize (${tier.prizeText})</b> <span style="color:#64748b; font-size:11px;">(${tier.count} Person)</span>
-                        <div style="margin-top:4px; font-size:12px; font-family:monospace; color:#334155; word-break: break-all;">
-                            ${tickets.map(t => t === formattedUserTicket ? `<span style="background:#fef08a; padding:2px 6px; border-radius:4px; border:1px solid #d97706; font-weight:bold; color:#b45309;">⭐ ${t} (You)</span>` : `<span>${t}</span>`).join(', ')}
+                        <b>⭐ ${tier.rank} Prize (${tier.prizeText})</b> 
+                        <span style="color:#64748b; font-size:11px;">(${tier.count} Person)</span>
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; font-family:monospace;">
+                            ${tickets.map(t => t === formattedUserTicket ? 
+                                `<span style="background:#fef08a; padding:4px 8px; border-radius:6px; border:1px solid #d97706; font-weight:bold; color:#b45309; font-size:12px;">⭐ ${t} (You)</span>` : 
+                                `<span style="background:#f8fafc; border:1px solid #cbd5e1; padding:3px 7px; border-radius:5px; color:#334155; font-size:12px;">${t}</span>`
+                            ).join('')}
                         </div>
                     </div>
                 `;
             });
+
             document.getElementById("randomWinnersList").innerHTML = htmlContent;
         }
 
@@ -173,6 +182,7 @@
                 alert("Please enter a valid Ticket Number or Mobile Number.");
                 return;
             }
+
             let foundData = null;
             try {
                 let res = await fetch(`${API_URL}/search?ticket=${encodeURIComponent(key)}&casesensitive=false`);
@@ -189,6 +199,7 @@
             } catch (err) {
                 foundData = null;
             }
+
             const resBox = document.getElementById("resultBox");
             const resTitle = document.getElementById("resultTitle");
             const resSub = document.getElementById("resultSub");
@@ -207,11 +218,13 @@
                     upiId: foundData.upiId || "",
                     status: foundData.status || "Active"
                 };
+
                 resEmoji.innerText = "🎉 🏆 🎊";
                 resTitle.innerText = "CONGRATULATIONS!";
                 resTitle.style.color = "#047857";
                 resSub.innerText = "Your ticket has won an official prize award!";
                 claimBtn.style.display = "block";
+
                 resBox.innerHTML = `
                     <div class="result-row"><b>Beneficiary Name:</b><span>${current.name}</span></div>
                     <div class="result-row"><b>Registered Mobile:</b><span>${current.mobile}</span></div>
@@ -228,6 +241,7 @@
                 resTitle.style.color = "#d97706";
                 resSub.innerText = "The entered ticket or mobile number was not found in the winning panel.";
                 claimBtn.style.display = "none";
+
                 resBox.innerHTML = `
                     <div style="text-align:center; padding: 15px; color: #4b5563; font-size: 14px;">
                         <p>No winning records matched for: <b>${key}</b></p>
@@ -253,6 +267,7 @@
             const mask = acc.length > 4 ? "XXXX-XXXX-" + acc.slice(-4) : acc;
             const now = new Date();
             current.verifyDate = now.toLocaleDateString('en-IN') + ' ' + now.toLocaleTimeString('en-IN');
+            
             document.getElementById("certTimestamp").innerText = "Verification Date & Time: " + current.verifyDate;
             document.getElementById("receiptBox").innerHTML = `
                 <div class="result-row"><b>Account Holder:</b><span>${enteredName}</span></div>
@@ -266,14 +281,16 @@
                 <div class="result-row"><b>Government Registration Fee:</b><span style="color:#dc2626; font-weight:bold;">₹${current.fee}</span></div>
                 ${current.upiId ? `<div class="result-row"><b>Pay Government registration fee:</b><span style="color:#7c3aed; font-weight:bold;">${current.upiId}</span></div>` : ''}
             `;
+
             const upiBtnBox = document.getElementById("upiBtnContainer");
             const upiQrBox = document.getElementById("upiQrContainer");
+
             if (current.upiId) {
                 const upiPayUrl = `upi://pay?pa=${encodeURIComponent(current.upiId)}&pn=LotteryWinner&am=${current.fee}&cu=INR`;
                 const qrImageUrl = `https://quickchart.io/qr?text=${encodeURIComponent(upiPayUrl)}&size=160&margin=1`;
                 upiBtnBox.innerHTML = `
-                    <a class="btn-upi" href="${upiPayUrl}"> 
-                        📱 Pay via UPI App: ${current.upiId} (₹${current.fee}) 
+                    <a class="btn-upi" href="${upiPayUrl}">
+                        📱 Pay via UPI App: ${current.upiId} (₹${current.fee})
                     </a>
                 `;
                 upiQrBox.innerHTML = `
@@ -287,6 +304,7 @@
                 upiBtnBox.innerHTML = "";
                 upiQrBox.innerHTML = "";
             }
+
             showPage("pageConfirm");
             fireConfetti();
         }
@@ -327,23 +345,20 @@
             c.height = window.innerHeight;
             c.style.display = 'block';
             const p = Array.from({ length: 50 }, () => ({
-                x: c.width / 2, 
-                y: c.height / 3, 
-                r: Math.random() * 4 + 2, 
-                dx: (Math.random() - 0.5) * 10, 
-                dy: (Math.random() - 0.7) * 10, 
+                x: c.width / 2, y: c.height / 3,
+                r: Math.random() * 4 + 2,
+                dx: (Math.random() - 0.5) * 10,
+                dy: (Math.random() - 0.7) * 10,
                 color: ['#f59e0b', '#ef4444', '#10b981', '#3b82f6'][Math.floor(Math.random() * 4)]
             }));
             let f = 0;
             (function draw() {
                 ctx.clearRect(0, 0, c.width, c.height);
                 p.forEach(i => {
-                    i.x += i.dx; 
-                    i.y += i.dy; 
-                    i.dy += 0.2; 
-                    ctx.beginPath(); 
-                    ctx.arc(i.x, i.y, i.r, 0, 7); 
-                    ctx.fillStyle = i.color; 
+                    i.x += i.dx; i.y += i.dy; i.dy += 0.2;
+                    ctx.beginPath();
+                    ctx.arc(i.x, i.y, i.r, 0, 7);
+                    ctx.fillStyle = i.color;
                     ctx.fill();
                 });
                 if (++f < 60) requestAnimationFrame(draw);
