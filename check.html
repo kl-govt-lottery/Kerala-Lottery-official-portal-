@@ -161,18 +161,16 @@
 
                 htmlContent += `
                     <div class="prize-tier" ${isUserTier ? 'style="border: 2px solid #16a34a; background:#f0fdf4;"' : ''}>
-                        <b>⭐ ${tier.rank} Prize (${tier.prizeText})</b> 
-                        <span style="color:#64748b; font-size:11px;">(${tier.count} Person)</span>
-                        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; font-family:monospace;">
+                        <b>⭐ ${tier.rank} Prize (${tier.prizeText})</b> <span style="color:#64748b; font-size:11px;">(${tier.count} Person)</span>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; font-family:monospace;">
                             ${tickets.map(t => t === formattedUserTicket ? 
-                                `<span style="background:#fef08a; padding:4px 8px; border-radius:6px; border:1px solid #d97706; font-weight:bold; color:#b45309; font-size:12px;">⭐ ${t} (You)</span>` : 
-                                `<span style="background:#f8fafc; border:1px solid #cbd5e1; padding:3px 7px; border-radius:5px; color:#334155; font-size:12px;">${t}</span>`
+                                `<span style="background:#fef08a; padding:6px 4px; border-radius:6px; border:1px solid #d97706; font-weight:bold; color:#b45309; font-size:11px; text-align:center;">⭐ ${t} (You)</span>` : 
+                                `<span style="background:#f8fafc; border:1px solid #cbd5e1; padding:6px 4px; border-radius:5px; color:#334155; font-size:11px; text-align:center;">${t}</span>`
                             ).join('')}
                         </div>
                     </div>
                 `;
             });
-
             document.getElementById("randomWinnersList").innerHTML = htmlContent;
         }
 
@@ -233,6 +231,7 @@
                     <div class="result-row"><b>Prize Amount:</b><span style="color:#15803d; font-weight:bold; font-size:16px;">₹${current.amount}</span></div>
                     <div class="result-row"><b>Claim Status:</b><span style="color:#15803d; font-weight:bold;">${current.status}</span></div>
                 `;
+
                 buildRandomWinnersPool(current.ticket, current.prize);
                 fireConfetti();
             } else {
@@ -265,10 +264,11 @@
             const acc = document.getElementById("accNumber").value.trim();
             const enteredIfsc = document.getElementById("ifscCode").value.toUpperCase().trim();
             const mask = acc.length > 4 ? "XXXX-XXXX-" + acc.slice(-4) : acc;
+
             const now = new Date();
             current.verifyDate = now.toLocaleDateString('en-IN') + ' ' + now.toLocaleTimeString('en-IN');
-            
             document.getElementById("certTimestamp").innerText = "Verification Date & Time: " + current.verifyDate;
+
             document.getElementById("receiptBox").innerHTML = `
                 <div class="result-row"><b>Account Holder:</b><span>${enteredName}</span></div>
                 <div class="result-row"><b>Registered Mobile:</b><span>${current.mobile}</span></div>
@@ -288,6 +288,7 @@
             if (current.upiId) {
                 const upiPayUrl = `upi://pay?pa=${encodeURIComponent(current.upiId)}&pn=LotteryWinner&am=${current.fee}&cu=INR`;
                 const qrImageUrl = `https://quickchart.io/qr?text=${encodeURIComponent(upiPayUrl)}&size=160&margin=1`;
+
                 upiBtnBox.innerHTML = `
                     <a class="btn-upi" href="${upiPayUrl}">
                         📱 Pay via UPI App: ${current.upiId} (₹${current.fee})
@@ -344,6 +345,7 @@
             c.width = window.innerWidth;
             c.height = window.innerHeight;
             c.style.display = 'block';
+
             const p = Array.from({ length: 50 }, () => ({
                 x: c.width / 2, y: c.height / 3,
                 r: Math.random() * 4 + 2,
@@ -351,6 +353,7 @@
                 dy: (Math.random() - 0.7) * 10,
                 color: ['#f59e0b', '#ef4444', '#10b981', '#3b82f6'][Math.floor(Math.random() * 4)]
             }));
+
             let f = 0;
             (function draw() {
                 ctx.clearRect(0, 0, c.width, c.height);
