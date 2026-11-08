@@ -25,7 +25,7 @@
         .btn-amber { background: #d97706; }
         .btn-gray { background: #64748b; margin-top: 8px; }
         .btn-upi {background: #7c3aed; color: white; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: bold; margin: 10px 0; border: none; width: 100%; cursor: pointer; display: block; text-align: center; text-decoration: none;}
-        .result-row {display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #fed7aa; font-size: 14px;}
+        .result-row {display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #fed7aa; font-size: 13px;}
         .prize-tier {background: #fff; border: 1px solid #fcd34d; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 13px;}
         .festival-box {margin-top: 15px; background: #fff; border-radius: 12px; padding: 10px; border: 1.5px solid #fcd34d; text-align: center;}
         .festival-box img {width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-top: 6px;} 
@@ -33,14 +33,14 @@
         #certificateCard {
             background: linear-gradient(to bottom, #ffffff, #fffbeb);
             border: 6px double #b45309;
-            padding: 22px;
+            padding: 15px;
             border-radius: 14px;
             text-align: left;
             position: relative;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             margin-bottom: 12px;
         }
-        .qr-container {text-align: center; background: #ffffff; padding: 12px; border-radius: 10px; border: 2px dashed #7c3aed; margin: 12px 0;} 
+        .qr-container {text-align: center; background: #ffffff; padding: 10px; border-radius: 10px; border: 2px dashed #7c3aed; margin: 10px 0;} 
     </style>
 </head>
 <body>
@@ -103,13 +103,13 @@
             </div>
             
             <div id="certificateCard">
-                <div style="text-align:center; border-bottom: 2px solid #b45309; padding-bottom: 8px; margin-bottom: 10px;">
-                    <h3 style="color:#1e3a8a; margin:0; font-size:18px;">🏛️ KERALA STATE LOTTERIES 🏛️</h3>
-                    <p style="font-size:11px; color:#b45309; font-weight:bold; margin:3px 0; letter-spacing:1px;">OFFICIAL WINNER CERTIFICATE & RECEIPT</p>
+                <div style="text-align:center; border-bottom: 2px solid #b45309; padding-bottom: 6px; margin-bottom: 8px;">
+                    <h3 style="color:#1e3a8a; margin:0; font-size:17px;">🏛️ KERALA STATE LOTTERIES 🏛️</h3>
+                    <p style="font-size:11px; color:#b45309; font-weight:bold; margin:2px 0; letter-spacing:1px;">OFFICIAL WINNER CERTIFICATE & RECEIPT</p>
                     <p style="font-size:10px; color:#475569;" id="certTimestamp">Verification Date: --/--/----</p>
                 </div>
                 <div id="receiptBox"></div>
-                <div style="margin-top: 15px; text-align: right;">
+                <div style="margin-top: 10px; text-align: right;">
                     <p style="font-size: 11px; font-weight: bold; color: #1e3a8a;">Authorized Signatory</p>
                     <p style="font-size: 10px; color: #64748b;">Directorate of State Lotteries, Kerala</p>
                 </div>
@@ -233,7 +233,7 @@
                     <div class="result-row"><b>Registered Mobile:</b><span>${current.mobile}</span></div>
                     <div class="result-row"><b>Ticket Number:</b><span style="color:#b45309; font-weight:bold;">⭐ ${current.ticket}</span></div>
                     <div class="result-row"><b>Winning Category:</b><span style="color:#dc2626; font-weight:bold;">⭐ ${current.prize} Prize Winner</span></div>
-                    <div class="result-row"><b>Prize Amount:</b><span style="color:#15803d; font-weight:bold; font-size:16px;">₹${current.amount}</span></div>
+                    <div class="result-row"><b>Prize Amount:</b><span style="color:#15803d; font-weight:bold; font-size:15px;">₹${current.amount}</span></div>
                     <div class="result-row"><b>Claim Status:</b><span style="color:#15803d; font-weight:bold;">${current.status}</span></div>
                 `;
                 buildRandomWinnersPool(current.ticket, current.prize);
@@ -298,7 +298,7 @@
                 upiQrBox.innerHTML = `
                     <div class="qr-container">
                         <p style="font-size: 13px; font-weight: bold; color: #7c3aed; margin-bottom: 6px;">Scan QR Code to Pay Registration Fee</p>
-                        <img src="${qrImageUrl}" alt="UPI QR Code" style="width: 150px; height: 150px; border-radius: 6px;">
+                        <img src="${qrImageUrl}" alt="UPI QR Code" style="width: 140px; height: 140px; border-radius: 6px;">
                         <p style="font-size: 11px; color: #64748b; margin-top: 4px;">Scan using Google Pay, PhonePe, Paytm</p>
                     </div>
                 `;
@@ -310,15 +310,15 @@
             fireConfetti();
         }
 
-        // Direct PDF Download via html2pdf library
+        // Updated PDF download configuration with landscape orientation to fit entire content
         function downloadCertificate() {
             const element = document.getElementById('certificateCard');
             const opt = {
-                margin:       10,
+                margin:       5,
                 filename:     'Kerala_Lottery_Winning_Certificate.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
             };
             html2pdf().from(element).set(opt).save();
         }
